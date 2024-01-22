@@ -150,11 +150,11 @@ struct ObjectInfo {
 
 
 #ifndef kDriver_Name
-#define                             kDriver_Name                        "BlackHole"
+#define                             kDriver_Name                        "iyo audio bridge"
 #endif
 
 #ifndef kPlugIn_BundleID
-#define                             kPlugIn_BundleID                    "audio.existential.BlackHole2ch"
+#define                             kPlugIn_BundleID                    "audio.dev.AudioBridge"
 #endif
 
 #ifndef kPlugIn_Icon
@@ -174,11 +174,11 @@ struct ObjectInfo {
 
 
 #ifndef kDevice_Name
-#define                             kDevice_Name                        kDriver_Name " %ich"
+#define                             kDevice_Name                        kDriver_Name
 #endif
 
 #ifndef kDevice2_Name
-#define                             kDevice2_Name                       kDriver_Name " %ich 2"
+#define                             kDevice2_Name                       kDriver_Name " 2"
 #endif
 
 
@@ -228,7 +228,7 @@ struct ObjectInfo {
 
 
 #ifndef kManufacturer_Name
-#define                             kManufacturer_Name                  "Existential Audio Inc."
+#define                             kManufacturer_Name                  "iyo"
 #endif
 
 #define                             kLatency_Frame_Size                 0
