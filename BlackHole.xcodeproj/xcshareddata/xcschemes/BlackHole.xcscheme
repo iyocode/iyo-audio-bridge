@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "3D89663D2849C318002AB3F0"
-               BuildableName = "BlackHole.driver"
-               BlueprintName = "BlackHole"
+               BuildableName = "IyoAudioBridge.driver"
+               BlueprintName = "IyoAudioBridge"
                ReferencedContainer = "container:BlackHole.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -51,8 +51,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "3D89663D2849C318002AB3F0"
-            BuildableName = "BlackHole.driver"
-            BlueprintName = "BlackHole"
+            BuildableName = "IyoAudioBridge.driver"
+            BlueprintName = "IyoAudioBridge"
             ReferencedContainer = "container:BlackHole.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

@@ -7,16 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3D083818284A7F1200C69403 /* VERSION in Resources */ = {isa = PBXBuildFile; fileRef = 3D89662F2849BF1A002AB3F0 /* VERSION */; };
-		3D083819284A7F1500C69403 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 2DA8FA1515FEAAB000F04B50 /* README.md */; };
 		3D88D48F285BBA5800629399 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D88D48E285BBA5800629399 /* main.c */; };
 		3D89663F2849C318002AB3F0 /* BlackHole.c in Sources */ = {isa = PBXBuildFile; fileRef = 2D616EF215B8C82500D598BD /* BlackHole.c */; };
 		3D8966412849C318002AB3F0 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D6C8E45275E92B40030C104 /* Accelerate.framework */; };
 		3D8966422849C318002AB3F0 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D7477EC157823CF00412279 /* CoreAudio.framework */; };
 		3D8966432849C318002AB3F0 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D7477AC1578168D00412279 /* CoreFoundation.framework */; };
-		3D8966462849C318002AB3F0 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 03FDCADB233FAE0500101681 /* LICENSE */; };
-		3D8966472849C318002AB3F0 /* BlackHole.icns in Resources */ = {isa = PBXBuildFile; fileRef = 03FDCAD9233F235500101681 /* BlackHole.icns */; };
-		3D8966482849C318002AB3F0 /* CHANGELOG.md in Resources */ = {isa = PBXBuildFile; fileRef = 039FF2572341B6E800400D7A /* CHANGELOG.md */; };
+		711F7A922B601B930053F62E /* IyoAudioBridge.icns in Resources */ = {isa = PBXBuildFile; fileRef = 711F7A912B601B930053F62E /* IyoAudioBridge.icns */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -32,27 +28,17 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		039FF2572341B6E800400D7A /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
-		03FDCAD9233F235500101681 /* BlackHole.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = BlackHole.icns; sourceTree = "<group>"; };
-		03FDCADB233FAE0500101681 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		2D616EF215B8C82500D598BD /* BlackHole.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BlackHole.c; sourceTree = "<group>"; };
 		2D7477AC1578168D00412279 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		2D7477EC157823CF00412279 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
-		2DA8FA1515FEAAB000F04B50 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		2DD7AA9915EC572000C67AE1 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		2DED183A15C357180091BE97 /* Kernel.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Kernel.framework; path = System/Library/Frameworks/Kernel.framework; sourceTree = SDKROOT; };
-		3D083806284A7BB000C69403 /* conclusion.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = conclusion.html; sourceTree = "<group>"; };
-		3D083807284A7BB000C69403 /* requirements.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = requirements.xml; sourceTree = "<group>"; };
-		3D083808284A7BB000C69403 /* welcome.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = welcome.html; sourceTree = "<group>"; };
 		3D08380E284A7DE100C69403 /* BlackHole.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = BlackHole.plist; sourceTree = "<group>"; };
-		3D08381B284AA8EE00C69403 /* create_installer.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = create_installer.sh; sourceTree = "<group>"; };
 		3D6C8E45275E92B40030C104 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		3D88D48C285BBA5800629399 /* BlackHoleTests */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = BlackHoleTests; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D88D48E285BBA5800629399 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
-		3D89662F2849BF1A002AB3F0 /* VERSION */ = {isa = PBXFileReference; lastKnownFileType = text; path = VERSION; sourceTree = "<group>"; };
-		3D89664D2849C318002AB3F0 /* BlackHole.driver */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BlackHole.driver; sourceTree = BUILT_PRODUCTS_DIR; };
-		3D8966882849D45F002AB3F0 /* postinstall */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = postinstall; sourceTree = "<group>"; };
-		3D8966892849D45F002AB3F0 /* preinstall */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = preinstall; sourceTree = "<group>"; };
+		3D89664D2849C318002AB3F0 /* IyoAudioBridge.driver */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IyoAudioBridge.driver; sourceTree = BUILT_PRODUCTS_DIR; };
+		711F7A912B601B930053F62E /* IyoAudioBridge.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = IyoAudioBridge.icns; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,8 +65,8 @@
 		2D616EF015B8C82500D598BD /* BlackHole */ = {
 			isa = PBXGroup;
 			children = (
+				711F7A912B601B930053F62E /* IyoAudioBridge.icns */,
 				3D08380E284A7DE100C69403 /* BlackHole.plist */,
-				03FDCAD9233F235500101681 /* BlackHole.icns */,
 				2D616EF215B8C82500D598BD /* BlackHole.c */,
 			);
 			path = BlackHole;
@@ -89,11 +75,6 @@
 		2D74779B1578162B00412279 = {
 			isa = PBXGroup;
 			children = (
-				3D083805284A7BB000C69403 /* Installer */,
-				3D89662F2849BF1A002AB3F0 /* VERSION */,
-				2DA8FA1515FEAAB000F04B50 /* README.md */,
-				03FDCADB233FAE0500101681 /* LICENSE */,
-				039FF2572341B6E800400D7A /* CHANGELOG.md */,
 				2D616EF015B8C82500D598BD /* BlackHole */,
 				3D88D48D285BBA5800629399 /* BlackHoleTests */,
 				2D7477AB1578168D00412279 /* Frameworks */,
@@ -104,7 +85,7 @@
 		2D7477AA1578168D00412279 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				3D89664D2849C318002AB3F0 /* BlackHole.driver */,
+				3D89664D2849C318002AB3F0 /* IyoAudioBridge.driver */,
 				3D88D48C285BBA5800629399 /* BlackHoleTests */,
 			);
 			name = Products;
@@ -122,33 +103,12 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		3D083805284A7BB000C69403 /* Installer */ = {
-			isa = PBXGroup;
-			children = (
-				3D08381B284AA8EE00C69403 /* create_installer.sh */,
-				3D8966872849D45F002AB3F0 /* scripts */,
-				3D083806284A7BB000C69403 /* conclusion.html */,
-				3D083807284A7BB000C69403 /* requirements.xml */,
-				3D083808284A7BB000C69403 /* welcome.html */,
-			);
-			path = Installer;
-			sourceTree = "<group>";
-		};
 		3D88D48D285BBA5800629399 /* BlackHoleTests */ = {
 			isa = PBXGroup;
 			children = (
 				3D88D48E285BBA5800629399 /* main.c */,
 			);
 			path = BlackHoleTests;
-			sourceTree = "<group>";
-		};
-		3D8966872849D45F002AB3F0 /* scripts */ = {
-			isa = PBXGroup;
-			children = (
-				3D8966882849D45F002AB3F0 /* postinstall */,
-				3D8966892849D45F002AB3F0 /* preinstall */,
-			);
-			path = scripts;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -171,9 +131,9 @@
 			productReference = 3D88D48C285BBA5800629399 /* BlackHoleTests */;
 			productType = "com.apple.product-type.tool";
 		};
-		3D89663D2849C318002AB3F0 /* BlackHole */ = {
+		3D89663D2849C318002AB3F0 /* IyoAudioBridge */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3D8966492849C318002AB3F0 /* Build configuration list for PBXNativeTarget "BlackHole" */;
+			buildConfigurationList = 3D8966492849C318002AB3F0 /* Build configuration list for PBXNativeTarget "IyoAudioBridge" */;
 			buildPhases = (
 				3D89663E2849C318002AB3F0 /* Sources */,
 				3D8966402849C318002AB3F0 /* Frameworks */,
@@ -183,9 +143,9 @@
 			);
 			dependencies = (
 			);
-			name = BlackHole;
+			name = IyoAudioBridge;
 			productName = AudioNULLDriver;
-			productReference = 3D89664D2849C318002AB3F0 /* BlackHole.driver */;
+			productReference = 3D89664D2849C318002AB3F0 /* IyoAudioBridge.driver */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
@@ -219,7 +179,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				3D89663D2849C318002AB3F0 /* BlackHole */,
+				3D89663D2849C318002AB3F0 /* IyoAudioBridge */,
 				3D88D48B285BBA5800629399 /* BlackHoleTests */,
 			);
 		};
@@ -230,11 +190,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3D8966462849C318002AB3F0 /* LICENSE in Resources */,
-				3D8966472849C318002AB3F0 /* BlackHole.icns in Resources */,
-				3D8966482849C318002AB3F0 /* CHANGELOG.md in Resources */,
-				3D083818284A7F1200C69403 /* VERSION in Resources */,
-				3D083819284A7F1500C69403 /* README.md in Resources */,
+				711F7A922B601B930053F62E /* IyoAudioBridge.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -536,7 +492,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Audio/Plug-Ins/HAL";
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = dev.Iyo.bridge;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.iyo.VADProAudioBridge;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				WRAPPER_EXTENSION = driver;
@@ -562,7 +518,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Audio/Plug-Ins/HAL";
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = dev.Iyo.bridge;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.iyo.VADProAudioBridge;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				WRAPPER_EXTENSION = driver;
@@ -588,7 +544,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Audio/Plug-Ins/HAL";
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = dev.Iyo.bridge;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.iyo.VADProAudioBridge;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				WRAPPER_EXTENSION = driver;
@@ -618,7 +574,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3D8966492849C318002AB3F0 /* Build configuration list for PBXNativeTarget "BlackHole" */ = {
+		3D8966492849C318002AB3F0 /* Build configuration list for PBXNativeTarget "IyoAudioBridge" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3D89664A2849C318002AB3F0 /* Release */,
