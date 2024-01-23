@@ -150,11 +150,11 @@ struct ObjectInfo {
 
 
 #ifndef kDriver_Name
-#define                             kDriver_Name                        "iyo audio bridge"
+#define                             kDriver_Name                        "iyo vad pro audio bridge"
 #endif
 
 #ifndef kPlugIn_BundleID
-#define                             kPlugIn_BundleID                    "audio.dev.AudioBridge"
+#define                             kPlugIn_BundleID                    "dev.iyo.VADProAudioBridge"
 #endif
 
 #ifndef kPlugIn_Icon
