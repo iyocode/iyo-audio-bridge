@@ -25,7 +25,7 @@
 	<key>CFPlugInFactories</key>
 	<dict>
 		<key>e395c745-4eea-4d94-bb92-46224221047c</key>
-		<string>BlackHole_Create</string>
+		<string>IyoAudioBridge_Create</string>
 	</dict>
 	<key>CFPlugInTypes</key>
 	<dict>
