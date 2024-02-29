@@ -2375,7 +2375,7 @@ static OSStatus	IyoAudioDriver_GetDevicePropertyDataSize(AudioServerPlugInDriver
 			break;
 
 		case kAudioDevicePropertyPreferredChannelLayout:
-			*outDataSize = offsetof(AudioChannelLayout, mChannelDescriptions) + (kNumber_Of_Channels * sizeof(AudioChannelDescription));
+			*outDataSize = offsetof(AudioChannelLayout, mChannelBitmap);
 			break;
 
 		case kAudioDevicePropertyZeroTimeStampPeriod:
@@ -2793,22 +2793,11 @@ static OSStatus	IyoAudioDriver_GetDevicePropertyData(AudioServerPlugInDriverRef 
 
 		case kAudioDevicePropertyPreferredChannelLayout:
 			//	This property returns the default AudioChannelLayout to use for the device
-			//	by default. For this device, we return a stereo ACL.
 			{
-				//	calculate how big the
-				UInt32 theACLSize = offsetof(AudioChannelLayout, mChannelDescriptions) + (kNumber_Of_Channels * sizeof(AudioChannelDescription));
+				UInt32 theACLSize = offsetof(AudioChannelLayout, mChannelBitmap);
 				FailWithAction(inDataSize < theACLSize, theAnswer = kAudioHardwareBadPropertySizeError, Done, "IyoAudioDriver_GetDevicePropertyData: not enough space for the return value of kAudioDevicePropertyPreferredChannelLayout for the device");
-				((AudioChannelLayout*)outData)->mChannelLayoutTag = kAudioChannelLayoutTag_UseChannelDescriptions;
-				((AudioChannelLayout*)outData)->mChannelBitmap = 0;
-				((AudioChannelLayout*)outData)->mNumberChannelDescriptions = kNumber_Of_Channels;
-				for(theItemIndex = 0; theItemIndex < kNumber_Of_Channels; ++theItemIndex)
-				{
-					((AudioChannelLayout*)outData)->mChannelDescriptions[theItemIndex].mChannelLabel = kAudioChannelLabel_Left + theItemIndex;
-					((AudioChannelLayout*)outData)->mChannelDescriptions[theItemIndex].mChannelFlags = 0;
-					((AudioChannelLayout*)outData)->mChannelDescriptions[theItemIndex].mCoordinates[0] = 0;
-					((AudioChannelLayout*)outData)->mChannelDescriptions[theItemIndex].mCoordinates[1] = 0;
-					((AudioChannelLayout*)outData)->mChannelDescriptions[theItemIndex].mCoordinates[2] = 0;
-				}
+				((AudioChannelLayout*)outData)->mChannelLayoutTag = kAudioChannelLayoutTag_UseChannelBitmap;
+				((AudioChannelLayout*)outData)->mChannelBitmap = kAudioChannelLayoutTag_Atmos_9_1_6; // Initialize the bitmap
 				*outDataSize = theACLSize;
 			}
 			break;
