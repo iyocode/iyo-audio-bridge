@@ -238,7 +238,7 @@ struct ObjectInfo {
 #endif
 
 #ifndef kEnableVolumeControl
-#define                             kEnableVolumeControl                 true
+#define                             kEnableVolumeControl                 false
 #endif
 
 static pthread_mutex_t              gPlugIn_StateMutex                  = PTHREAD_MUTEX_INITIALIZER;
@@ -3423,9 +3423,12 @@ static OSStatus	IyoAudioDriver_IsControlPropertySettable(AudioServerPlugInDriver
 				case kAudioLevelControlPropertyDecibelRange:
 				case kAudioLevelControlPropertyConvertScalarToDecibels:
 				case kAudioLevelControlPropertyConvertDecibelsToScalar:
+					*outIsSettable = false;
+					break;
+				
 				case kAudioLevelControlPropertyScalarValue:
 				case kAudioLevelControlPropertyDecibelValue:
-					*outIsSettable = false;
+					*outIsSettable = true;
 					break;
 				
 				default:
@@ -3444,8 +3447,11 @@ static OSStatus	IyoAudioDriver_IsControlPropertySettable(AudioServerPlugInDriver
 				case kAudioObjectPropertyOwnedObjects:
 				case kAudioControlPropertyScope:
 				case kAudioControlPropertyElement:
-				case kAudioBooleanControlPropertyValue:
 					*outIsSettable = false;
+					break;
+				
+				case kAudioBooleanControlPropertyValue:
+					*outIsSettable = true;
 					break;
 				
 				default:
@@ -3718,8 +3724,192 @@ static OSStatus	IyoAudioDriver_GetControlPropertyData(AudioServerPlugInDriverRef
 	{
 		case kObjectID_Volume_Input_Master:
 		case kObjectID_Volume_Output_Master:
+			switch(inAddress->mSelector)
+			{
+				case kAudioObjectPropertyBaseClass:
+					//	The base class for kAudioVolumeControlClassID is kAudioLevelControlClassID
+					FailWithAction(inDataSize < sizeof(AudioClassID), theAnswer = kAudioHardwareBadPropertySizeError, Done, "BlackHole_GetControlPropertyData: not enough space for the return value of kAudioObjectPropertyBaseClass for the volume control");
+					*((AudioClassID*)outData) = kAudioLevelControlClassID;
+					*outDataSize = sizeof(AudioClassID);
+					break;
+					
+				case kAudioObjectPropertyClass:
+					//	Volume controls are of the class, kAudioVolumeControlClassID
+					FailWithAction(inDataSize < sizeof(AudioClassID), theAnswer = kAudioHardwareBadPropertySizeError, Done, "BlackHole_GetControlPropertyData: not enough space for the return value of kAudioObjectPropertyClass for the volume control");
+					*((AudioClassID*)outData) = kAudioVolumeControlClassID;
+					*outDataSize = sizeof(AudioClassID);
+					break;
+					
+				case kAudioObjectPropertyOwner:
+					//	The control's owner is the device object
+					FailWithAction(inDataSize < sizeof(AudioObjectID), theAnswer = kAudioHardwareBadPropertySizeError, Done, "BlackHole_GetControlPropertyData: not enough space for the return value of kAudioObjectPropertyOwner for the volume control");
+					*((AudioObjectID*)outData) = kObjectID_Device;
+					*outDataSize = sizeof(AudioObjectID);
+					break;
+					
+				case kAudioObjectPropertyOwnedObjects:
+					//	Controls do not own any objects
+					*outDataSize = 0 * sizeof(AudioObjectID);
+					break;
+
+				case kAudioControlPropertyScope:
+					//	This property returns the scope that the control is attached to.
+					FailWithAction(inDataSize < sizeof(AudioObjectPropertyScope), theAnswer = kAudioHardwareBadPropertySizeError, Done, "BlackHole_GetControlPropertyData: not enough space for the return value of kAudioControlPropertyScope for the volume control");
+					*((AudioObjectPropertyScope*)outData) = (inObjectID == kObjectID_Volume_Input_Master) ? kAudioObjectPropertyScopeInput : kAudioObjectPropertyScopeOutput;
+					*outDataSize = sizeof(AudioObjectPropertyScope);
+					break;
+
+				case kAudioControlPropertyElement:
+					//	This property returns the element that the control is attached to.
+					FailWithAction(inDataSize < sizeof(AudioObjectPropertyElement), theAnswer = kAudioHardwareBadPropertySizeError, Done, "BlackHole_GetControlPropertyData: not enough space for the return value of kAudioControlPropertyElement for the volume control");
+					*((AudioObjectPropertyElement*)outData) = kAudioObjectPropertyElementMain;
+					*outDataSize = sizeof(AudioObjectPropertyElement);
+					break;
+
+				case kAudioLevelControlPropertyScalarValue:
+					//	This returns the value of the control in the normalized range of 0 to 1.
+					//	Note that we need to take the state lock to examine the value.
+					FailWithAction(inDataSize < sizeof(Float32), theAnswer = kAudioHardwareBadPropertySizeError, Done, "BlackHole_GetControlPropertyData: not enough space for the return value of kAudioLevelControlPropertyScalarValue for the volume control");
+					pthread_mutex_lock(&gPlugIn_StateMutex);
+					*((Float32*)outData) = volume_to_scalar(gVolume_Master_Value);
+					pthread_mutex_unlock(&gPlugIn_StateMutex);
+					*outDataSize = sizeof(Float32);
+					break;
+
+				case kAudioLevelControlPropertyDecibelValue:
+					//	This returns the dB value of the control.
+					//	Note that we need to take the state lock to examine the value.
+					FailWithAction(inDataSize < sizeof(Float32), theAnswer = kAudioHardwareBadPropertySizeError, Done, "BlackHole_GetControlPropertyData: not enough space for the return value of kAudioLevelControlPropertyDecibelValue for the volume control");
+					pthread_mutex_lock(&gPlugIn_StateMutex);
+					*((Float32*)outData) = gVolume_Master_Value;
+					pthread_mutex_unlock(&gPlugIn_StateMutex);
+					*((Float32*)outData) = volume_to_decibel(*((Float32*)outData));
+					
+					//	report how much we wrote
+					*outDataSize = sizeof(Float32);
+					break;
+
+				case kAudioLevelControlPropertyDecibelRange:
+					//	This returns the dB range of the control.
+					FailWithAction(inDataSize < sizeof(AudioValueRange), theAnswer = kAudioHardwareBadPropertySizeError, Done, "BlackHole_GetControlPropertyData: not enough space for the return value of kAudioLevelControlPropertyDecibelRange for the volume control");
+					((AudioValueRange*)outData)->mMinimum = kVolume_MinDB;
+					((AudioValueRange*)outData)->mMaximum = kVolume_MaxDB;
+					*outDataSize = sizeof(AudioValueRange);
+					break;
+
+				case kAudioLevelControlPropertyConvertScalarToDecibels:
+					//	This takes the scalar value in outData and converts it to dB.
+					FailWithAction(inDataSize < sizeof(Float32), theAnswer = kAudioHardwareBadPropertySizeError, Done, "BlackHole_GetControlPropertyData: not enough space for the return value of kAudioLevelControlPropertyDecibelValue for the volume control");
+					
+					//	clamp the value to be between 0 and 1
+					if(*((Float32*)outData) < 0.0)
+					{
+						*((Float32*)outData) = 0;
+					}
+					if(*((Float32*)outData) > 1.0)
+					{
+						*((Float32*)outData) = 1.0;
+					}
+					
+					//	Note that we square the scalar value before converting to dB so as to
+					//	provide a better curve for the slider
+					*((Float32*)outData) *= *((Float32*)outData);
+					*((Float32*)outData) = kVolume_MinDB + (*((Float32*)outData) * (kVolume_MaxDB - kVolume_MinDB));
+					
+					//	report how much we wrote
+					*outDataSize = sizeof(Float32);
+					break;
+
+				case kAudioLevelControlPropertyConvertDecibelsToScalar:
+					//	This takes the dB value in outData and converts it to scalar.
+					FailWithAction(inDataSize < sizeof(Float32), theAnswer = kAudioHardwareBadPropertySizeError, Done, "BlackHole_GetControlPropertyData: not enough space for the return value of kAudioLevelControlPropertyDecibelValue for the volume control");
+					
+					//	clamp the value to be between kVolume_MinDB and kVolume_MaxDB
+					if(*((Float32*)outData) < kVolume_MinDB)
+					{
+						*((Float32*)outData) = kVolume_MinDB;
+					}
+					if(*((Float32*)outData) > kVolume_MaxDB)
+					{
+						*((Float32*)outData) = kVolume_MaxDB;
+					}
+					
+					//	Note that we square the scalar value before converting to dB so as to
+					//	provide a better curve for the slider. We undo that here.
+					*((Float32*)outData) = *((Float32*)outData) - kVolume_MinDB;
+					*((Float32*)outData) /= kVolume_MaxDB - kVolume_MinDB;
+					*((Float32*)outData) = sqrtf(*((Float32*)outData));
+					
+					//	report how much we wrote
+					*outDataSize = sizeof(Float32);
+					break;
+
+				default:
+					theAnswer = kAudioHardwareUnknownPropertyError;
+					break;
+			};
+			break;
+		
 		case kObjectID_Mute_Input_Master:
 		case kObjectID_Mute_Output_Master:
+			switch(inAddress->mSelector)
+			{
+				case kAudioObjectPropertyBaseClass:
+					//	The base class for kAudioMuteControlClassID is kAudioBooleanControlClassID
+					FailWithAction(inDataSize < sizeof(AudioClassID), theAnswer = kAudioHardwareBadPropertySizeError, Done, "BlackHole_GetControlPropertyData: not enough space for the return value of kAudioObjectPropertyBaseClass for the mute control");
+					*((AudioClassID*)outData) = kAudioBooleanControlClassID;
+					*outDataSize = sizeof(AudioClassID);
+					break;
+					
+				case kAudioObjectPropertyClass:
+					//	Mute controls are of the class, kAudioMuteControlClassID
+					FailWithAction(inDataSize < sizeof(AudioClassID), theAnswer = kAudioHardwareBadPropertySizeError, Done, "BlackHole_GetControlPropertyData: not enough space for the return value of kAudioObjectPropertyClass for the mute control");
+					*((AudioClassID*)outData) = kAudioMuteControlClassID;
+					*outDataSize = sizeof(AudioClassID);
+					break;
+					
+				case kAudioObjectPropertyOwner:
+					//	The control's owner is the device object
+					FailWithAction(inDataSize < sizeof(AudioObjectID), theAnswer = kAudioHardwareBadPropertySizeError, Done, "BlackHole_GetControlPropertyData: not enough space for the return value of kAudioObjectPropertyOwner for the mute control");
+					*((AudioObjectID*)outData) = kObjectID_Device;
+					*outDataSize = sizeof(AudioObjectID);
+					break;
+					
+				case kAudioObjectPropertyOwnedObjects:
+					//	Controls do not own any objects
+					*outDataSize = 0 * sizeof(AudioObjectID);
+					break;
+
+				case kAudioControlPropertyScope:
+					//	This property returns the scope that the control is attached to.
+					FailWithAction(inDataSize < sizeof(AudioObjectPropertyScope), theAnswer = kAudioHardwareBadPropertySizeError, Done, "BlackHole_GetControlPropertyData: not enough space for the return value of kAudioControlPropertyScope for the mute control");
+					*((AudioObjectPropertyScope*)outData) = (inObjectID == kObjectID_Mute_Input_Master) ? kAudioObjectPropertyScopeInput : kAudioObjectPropertyScopeOutput;
+					*outDataSize = sizeof(AudioObjectPropertyScope);
+					break;
+
+				case kAudioControlPropertyElement:
+					//	This property returns the element that the control is attached to.
+					FailWithAction(inDataSize < sizeof(AudioObjectPropertyElement), theAnswer = kAudioHardwareBadPropertySizeError, Done, "BlackHole_GetControlPropertyData: not enough space for the return value of kAudioControlPropertyElement for the mute control");
+					*((AudioObjectPropertyElement*)outData) = kAudioObjectPropertyElementMain;
+					*outDataSize = sizeof(AudioObjectPropertyElement);
+					break;
+
+				case kAudioBooleanControlPropertyValue:
+					//	This returns the value of the mute control where 0 means that mute is off
+					//	and audio can be heard and 1 means that mute is on and audio cannot be heard.
+					//	Note that we need to take the state lock to examine this value.
+					FailWithAction(inDataSize < sizeof(UInt32), theAnswer = kAudioHardwareBadPropertySizeError, Done, "BlackHole_GetControlPropertyData: not enough space for the return value of kAudioBooleanControlPropertyValue for the mute control");
+					pthread_mutex_lock(&gPlugIn_StateMutex);
+					*((UInt32*)outData) = gMute_Master_Value ? 1 : 0;
+					pthread_mutex_unlock(&gPlugIn_StateMutex);
+					*outDataSize = sizeof(UInt32);
+					break;
+
+				default:
+					theAnswer = kAudioHardwareUnknownPropertyError;
+					break;
+			};
+			break;
 		case kObjectID_Pitch_Adjust:
 		case kObjectID_ClockSource:
 			break;
@@ -3758,8 +3948,96 @@ static OSStatus	IyoAudioDriver_SetControlPropertyData(AudioServerPlugInDriverRef
 	{
 		case kObjectID_Volume_Input_Master:
 		case kObjectID_Volume_Output_Master:
+			switch(inAddress->mSelector)
+			{
+				case kAudioLevelControlPropertyScalarValue:
+					//	For the scalar volume, we clamp the new value to [0, 1]. Note that if this
+					//	value changes, it implies that the dB value changed too.
+					FailWithAction(inDataSize != sizeof(Float32), theAnswer = kAudioHardwareBadPropertySizeError, Done, "BlackHole_SetControlPropertyData: wrong size for the data for kAudioLevelControlPropertyScalarValue");
+					theNewVolume = volume_from_scalar(*((const Float32*)inData));
+					if(theNewVolume < 0.0)
+					{
+						theNewVolume = 0.0;
+					}
+					else if(theNewVolume > 1.0)
+					{
+						theNewVolume = 1.0;
+					}
+					pthread_mutex_lock(&gPlugIn_StateMutex);
+                    if(gVolume_Master_Value != theNewVolume)
+                    {
+                        gVolume_Master_Value = theNewVolume;
+                        *outNumberPropertiesChanged = 2;
+                        outChangedAddresses[0].mSelector = kAudioLevelControlPropertyScalarValue;
+                        outChangedAddresses[0].mScope = kAudioObjectPropertyScopeGlobal;
+                        outChangedAddresses[0].mElement = kAudioObjectPropertyElementMain;
+                        outChangedAddresses[1].mSelector = kAudioLevelControlPropertyDecibelValue;
+                        outChangedAddresses[1].mScope = kAudioObjectPropertyScopeGlobal;
+                        outChangedAddresses[1].mElement = kAudioObjectPropertyElementMain;
+                    }
+					pthread_mutex_unlock(&gPlugIn_StateMutex);
+					break;
+				
+				case kAudioLevelControlPropertyDecibelValue:
+					//	For the dB value, we first convert it to a scalar value since that is how
+					//	the value is tracked. Note that if this value changes, it implies that the
+					//	scalar value changes as well.
+					FailWithAction(inDataSize != sizeof(Float32), theAnswer = kAudioHardwareBadPropertySizeError, Done, "BlackHole_SetControlPropertyData: wrong size for the data for kAudioLevelControlPropertyScalarValue");
+					theNewVolume = *((const Float32*)inData);
+					if(theNewVolume < kVolume_MinDB)
+					{
+						theNewVolume = kVolume_MinDB;
+					}
+					else if(theNewVolume > kVolume_MaxDB)
+					{
+						theNewVolume = kVolume_MaxDB;
+					}
+					theNewVolume = volume_from_decibel(theNewVolume);
+					pthread_mutex_lock(&gPlugIn_StateMutex);
+                    if(gVolume_Master_Value != theNewVolume)
+                    {
+                        gVolume_Master_Value = theNewVolume;
+                        *outNumberPropertiesChanged = 2;
+                        outChangedAddresses[0].mSelector = kAudioLevelControlPropertyScalarValue;
+                        outChangedAddresses[0].mScope = kAudioObjectPropertyScopeGlobal;
+                        outChangedAddresses[0].mElement = kAudioObjectPropertyElementMain;
+                        outChangedAddresses[1].mSelector = kAudioLevelControlPropertyDecibelValue;
+                        outChangedAddresses[1].mScope = kAudioObjectPropertyScopeGlobal;
+                        outChangedAddresses[1].mElement = kAudioObjectPropertyElementMain;
+                    }
+					pthread_mutex_unlock(&gPlugIn_StateMutex);
+					break;
+				
+				default:
+					theAnswer = kAudioHardwareUnknownPropertyError;
+					break;
+			};
+			break;
+		
 		case kObjectID_Mute_Input_Master:
 		case kObjectID_Mute_Output_Master:
+			switch(inAddress->mSelector)
+			{
+				case kAudioBooleanControlPropertyValue:
+					FailWithAction(inDataSize != sizeof(UInt32), theAnswer = kAudioHardwareBadPropertySizeError, Done, "BlackHole_SetControlPropertyData: wrong size for the data for kAudioBooleanControlPropertyValue");
+					pthread_mutex_lock(&gPlugIn_StateMutex);
+                    if(gMute_Master_Value != (*((const UInt32*)inData) != 0))
+                    {
+                        gMute_Master_Value = *((const UInt32*)inData) != 0;
+                        *outNumberPropertiesChanged = 1;
+                        outChangedAddresses[0].mSelector = kAudioBooleanControlPropertyValue;
+                        outChangedAddresses[0].mScope = kAudioObjectPropertyScopeGlobal;
+                        outChangedAddresses[0].mElement = kAudioObjectPropertyElementMain;
+                    }
+					pthread_mutex_unlock(&gPlugIn_StateMutex);
+					break;
+				
+				default:
+					theAnswer = kAudioHardwareUnknownPropertyError;
+					break;
+			};
+			break;
+
 		case kObjectID_Pitch_Adjust:
 		case kObjectID_ClockSource:
 			break;
