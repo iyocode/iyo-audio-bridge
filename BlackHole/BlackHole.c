@@ -273,6 +273,7 @@ static bool                         gStream_Output_IsActive             = true;
 static const Float32                kVolume_MinDB                       = -64.0;
 static const Float32                kVolume_MaxDB                       = 0.0;
 static Float32                      gVolume_Master_Value                = 1.0;
+static Float32                      gVolumme_Static_Value               = 0.707;
 static Float32                      gPitch_Adjust                       = 0.5;
 static bool                         gMute_Master_Value                  = false;
 static UInt32                       kClockSource_NumberItems            = 2;
@@ -4324,7 +4325,10 @@ static OSStatus	IyoAudioDriver_DoIOOperation(AudioServerPlugInDriverRef inDriver
 	    {
 	 	vDSP_vsmul(ioMainBuffer, 1, &gVolume_Master_Value, ioMainBuffer, 1, inIOBufferFrameSize * kNumber_Of_Channels);
 	    }
-
+	    else
+	    {
+		vDSP_vsmul(ioMainBuffer, 1, &gVolumme_Static_Value, ioMainBuffer, 1, inIOBufferFrameSize * kNumber_Of_Channels);
+	    }
         }
     }
     
