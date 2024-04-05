@@ -234,7 +234,7 @@ struct ObjectInfo {
 #define                             kLatency_Frame_Size                 0
 
 #ifndef kNumber_Of_Channels
-#define                             kNumber_Of_Channels                 12
+#define                             kNumber_Of_Channels                 16
 #endif
 
 #ifndef kEnableVolumeControl
@@ -2796,8 +2796,9 @@ static OSStatus	IyoAudioDriver_GetDevicePropertyData(AudioServerPlugInDriverRef 
 			{
 				UInt32 theACLSize = offsetof(AudioChannelLayout, mChannelBitmap);
 				FailWithAction(inDataSize < theACLSize, theAnswer = kAudioHardwareBadPropertySizeError, Done, "IyoAudioDriver_GetDevicePropertyData: not enough space for the return value of kAudioDevicePropertyPreferredChannelLayout for the device");
-				((AudioChannelLayout*)outData)->mChannelLayoutTag = kAudioChannelLayoutTag_UseChannelBitmap;
-				((AudioChannelLayout*)outData)->mChannelBitmap = kAudioChannelLayoutTag_Atmos_7_1_4; // Initialize the bitmap
+				((AudioChannelLayout*)outData)->mChannelLayoutTag = kAudioChannelLayoutTag_Atmos_7_1_4;
+				((AudioChannelLayout*)outData)->mChannelBitmap = 0;
+				((AudioChannelLayout*)outData)->mNumberChannelDescriptions = 0;
 				*outDataSize = theACLSize;
 			}
 			break;
