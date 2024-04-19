@@ -1,12 +1,8 @@
 # iyo-audio-bridge
-Audio bridge for iyo vad pro plugin
+Audio bridge for iyo vad pro plugin. This is a fork of the [BlackHole open source project](https://github.com/ExistentialAudio/BlackHole).
+We exclused that project's commit history and changes can be seen in diff form with `git diff 036c0581 HEAD`.
 
-## Developer Guides
-
-### A license is required for all non-GPLv3 projects
-Please support our hard work and continued development. To request a license [contact Existential Audio](mailto:devinroth@existential.audio).
-
-### Build & Install
+## Build & Install
 After building, to install BlackHole:
 
 1. Copy or move the built `BlackHoleXch.driver` bundle to `/Library/Audio/Plug-Ins/HAL`
