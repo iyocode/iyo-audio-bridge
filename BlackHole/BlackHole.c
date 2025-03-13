@@ -2376,7 +2376,7 @@ static OSStatus	IyoAudioDriver_GetDevicePropertyDataSize(AudioServerPlugInDriver
 			break;
 
 		case kAudioDevicePropertyPreferredChannelLayout:
-			*outDataSize = offsetof(AudioChannelLayout, mChannelBitmap);
+			*outDataSize = offsetof(AudioChannelLayout, mChannelDescriptions);
 			break;
 
 		case kAudioDevicePropertyZeroTimeStampPeriod:
@@ -2795,7 +2795,7 @@ static OSStatus	IyoAudioDriver_GetDevicePropertyData(AudioServerPlugInDriverRef 
 		case kAudioDevicePropertyPreferredChannelLayout:
 			//	This property returns the default AudioChannelLayout to use for the device
 			{
-				UInt32 theACLSize = offsetof(AudioChannelLayout, mChannelBitmap);
+				UInt32 theACLSize = offsetof(AudioChannelLayout, mChannelDescriptions);
 				FailWithAction(inDataSize < theACLSize, theAnswer = kAudioHardwareBadPropertySizeError, Done, "IyoAudioDriver_GetDevicePropertyData: not enough space for the return value of kAudioDevicePropertyPreferredChannelLayout for the device");
 				((AudioChannelLayout*)outData)->mChannelLayoutTag = kAudioChannelLayoutTag_Atmos_7_1_4;
 				((AudioChannelLayout*)outData)->mChannelBitmap = 0;
