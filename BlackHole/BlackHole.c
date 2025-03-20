@@ -234,7 +234,7 @@ struct ObjectInfo {
 #define                             kLatency_Frame_Size                 0
 
 #ifndef kNumber_Of_Channels
-#define                             kNumber_Of_Channels                 16
+#define                             kNumber_Of_Channels                 12
 #endif
 
 #ifndef kEnableVolumeControl
