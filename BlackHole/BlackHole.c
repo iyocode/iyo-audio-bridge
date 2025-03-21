@@ -2803,12 +2803,25 @@ static OSStatus	IyoAudioDriver_GetDevicePropertyData(AudioServerPlugInDriverRef 
 				((AudioChannelLayout*)outData)->mNumberChannelDescriptions = kNumber_Of_Channels;
 				for(theItemIndex = 0; theItemIndex < kNumber_Of_Channels; ++theItemIndex)
 				{
-					((AudioChannelLayout*)outData)->mChannelDescriptions[theItemIndex].mChannelLabel = kAudioChannelLabel_Left + theItemIndex;
 					((AudioChannelLayout*)outData)->mChannelDescriptions[theItemIndex].mChannelFlags = 0;
 					((AudioChannelLayout*)outData)->mChannelDescriptions[theItemIndex].mCoordinates[0] = 0;
 					((AudioChannelLayout*)outData)->mChannelDescriptions[theItemIndex].mCoordinates[1] = 0;
 					((AudioChannelLayout*)outData)->mChannelDescriptions[theItemIndex].mCoordinates[2] = 0;
 				}
+
+				((AudioChannelLayout*)outData)->mChannelDescriptions[0].mChannelLabel = kAudioChannelLabel_Left;
+				((AudioChannelLayout*)outData)->mChannelDescriptions[1].mChannelLabel = kAudioChannelLabel_Right;
+				((AudioChannelLayout*)outData)->mChannelDescriptions[2].mChannelLabel = kAudioChannelLabel_Center;
+				((AudioChannelLayout*)outData)->mChannelDescriptions[3].mChannelLabel = kAudioChannelLabel_LFEScreen;
+				((AudioChannelLayout*)outData)->mChannelDescriptions[4].mChannelLabel = kAudioChannelLabel_LeftSurround;
+				((AudioChannelLayout*)outData)->mChannelDescriptions[5].mChannelLabel = kAudioChannelLabel_RightSurround;
+				((AudioChannelLayout*)outData)->mChannelDescriptions[6].mChannelLabel = kAudioChannelLabel_RearSurroundLeft;
+				((AudioChannelLayout*)outData)->mChannelDescriptions[7].mChannelLabel = kAudioChannelLabel_RearSurroundRight;
+				((AudioChannelLayout*)outData)->mChannelDescriptions[8].mChannelLabel = kAudioChannelLabel_VerticalHeightLeft;
+				((AudioChannelLayout*)outData)->mChannelDescriptions[9].mChannelLabel = kAudioChannelLabel_VerticalHeightRight;
+				((AudioChannelLayout*)outData)->mChannelDescriptions[10].mChannelLabel = kAudioChannelLabel_LeftTopRear;
+				((AudioChannelLayout*)outData)->mChannelDescriptions[11].mChannelLabel = kAudioChannelLabel_RightTopRear;
+
 				*outDataSize = theACLSize;
 			}
 			break;
