@@ -2376,7 +2376,7 @@ static OSStatus	IyoAudioDriver_GetDevicePropertyDataSize(AudioServerPlugInDriver
 			break;
 
 		case kAudioDevicePropertyPreferredChannelLayout:
-			*outDataSize = offsetof(AudioChannelLayout, mChannelDescriptions);
+			*outDataSize = offsetof(AudioChannelLayout, mChannelDescriptions) + (kNumber_Of_Channels * sizeof(AudioChannelDescription));
 			break;
 
 		case kAudioDevicePropertyZeroTimeStampPeriod:
@@ -2795,11 +2795,33 @@ static OSStatus	IyoAudioDriver_GetDevicePropertyData(AudioServerPlugInDriverRef 
 		case kAudioDevicePropertyPreferredChannelLayout:
 			//	This property returns the default AudioChannelLayout to use for the device
 			{
-				UInt32 theACLSize = offsetof(AudioChannelLayout, mChannelDescriptions);
-				FailWithAction(inDataSize < theACLSize, theAnswer = kAudioHardwareBadPropertySizeError, Done, "IyoAudioDriver_GetDevicePropertyData: not enough space for the return value of kAudioDevicePropertyPreferredChannelLayout for the device");
-				((AudioChannelLayout*)outData)->mChannelLayoutTag = kAudioChannelLayoutTag_Atmos_7_1_4;
+				//	calculate how big the
+				UInt32 theACLSize = offsetof(AudioChannelLayout, mChannelDescriptions) + (kNumber_Of_Channels * sizeof(AudioChannelDescription));
+				FailWithAction(inDataSize < theACLSize, theAnswer = kAudioHardwareBadPropertySizeError, Done, "BlackHole_GetDevicePropertyData: not enough space for the return value of kAudioDevicePropertyPreferredChannelLayout for the device");
+				((AudioChannelLayout*)outData)->mChannelLayoutTag = kAudioChannelLayoutTag_UseChannelDescriptions;
 				((AudioChannelLayout*)outData)->mChannelBitmap = 0;
-				((AudioChannelLayout*)outData)->mNumberChannelDescriptions = 0;
+				((AudioChannelLayout*)outData)->mNumberChannelDescriptions = kNumber_Of_Channels;
+				for(theItemIndex = 0; theItemIndex < kNumber_Of_Channels; ++theItemIndex)
+				{
+					((AudioChannelLayout*)outData)->mChannelDescriptions[theItemIndex].mChannelFlags = 0;
+					((AudioChannelLayout*)outData)->mChannelDescriptions[theItemIndex].mCoordinates[0] = 0;
+					((AudioChannelLayout*)outData)->mChannelDescriptions[theItemIndex].mCoordinates[1] = 0;
+					((AudioChannelLayout*)outData)->mChannelDescriptions[theItemIndex].mCoordinates[2] = 0;
+				}
+
+				((AudioChannelLayout*)outData)->mChannelDescriptions[0].mChannelLabel = kAudioChannelLabel_Left;
+				((AudioChannelLayout*)outData)->mChannelDescriptions[1].mChannelLabel = kAudioChannelLabel_Right;
+				((AudioChannelLayout*)outData)->mChannelDescriptions[2].mChannelLabel = kAudioChannelLabel_Center;
+				((AudioChannelLayout*)outData)->mChannelDescriptions[3].mChannelLabel = kAudioChannelLabel_LFEScreen;
+				((AudioChannelLayout*)outData)->mChannelDescriptions[4].mChannelLabel = kAudioChannelLabel_LeftSurround;
+				((AudioChannelLayout*)outData)->mChannelDescriptions[5].mChannelLabel = kAudioChannelLabel_RightSurround;
+				((AudioChannelLayout*)outData)->mChannelDescriptions[6].mChannelLabel = kAudioChannelLabel_RearSurroundLeft;
+				((AudioChannelLayout*)outData)->mChannelDescriptions[7].mChannelLabel = kAudioChannelLabel_RearSurroundRight;
+				((AudioChannelLayout*)outData)->mChannelDescriptions[8].mChannelLabel = kAudioChannelLabel_VerticalHeightLeft;
+				((AudioChannelLayout*)outData)->mChannelDescriptions[9].mChannelLabel = kAudioChannelLabel_VerticalHeightRight;
+				((AudioChannelLayout*)outData)->mChannelDescriptions[10].mChannelLabel = kAudioChannelLabel_LeftTopRear;
+				((AudioChannelLayout*)outData)->mChannelDescriptions[11].mChannelLabel = kAudioChannelLabel_RightTopRear;
+
 				*outDataSize = theACLSize;
 			}
 			break;
